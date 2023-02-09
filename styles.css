@@ -5,4 +5,7 @@
     margin: 10px;
     display: inline-block;
   }
+  body {
+    color: rgb(42, 42, 42);
+  }
   
