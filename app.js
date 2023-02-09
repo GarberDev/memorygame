@@ -1,4 +1,7 @@
 const gameContainer = document.getElementById("game");
+let timer = document.querySelector('#timer');
+let start = document.querySelector('#start');
+
 
 const COLORS = [
   "red",
@@ -63,13 +66,82 @@ function createDivsForColors(colorArray) {
   }
 }
 
+
+let clockCounter = 0
+document.getElementById('game').style.pointerEvents = 'none';
+start.addEventListener('click', function(){
+  document.getElementById('game').style.pointerEvents = 'auto';
+  setInterval(function(){
+    timer.innerHTML = "Time : " + clockCounter ++ + " seconds";
+    return clockCounter
+  }, 1000); 
+});
+
+
 // TODO: Implement this function!
+
+let card1 = null;
+let card2 = null;
+let totalFlipped = 0
+let noClick = false
+let currentScore = 0
+
 function handleCardClick(event) { 
-  // you can use event.target to see which element was clicked
-  console.log("you just clicked", event.target);
+
+  if (noClick) return;
+
+  let clickedCard = event.target;
+  clickedCard.style.backgroundColor = clickedCard.classList[0]; 
+
+
+if (!card1 || !card2) {
+  if(!clickedCard.classList.contains("flipped")) {
+    scorefunc(currentScore+1);
+  }
+  clickedCard.classList.add("flipped");
+  card1 = card1 || clickedCard;
+  if (clickedCard === card1) {
+      card2 = null;
+  } else {
+    card2 = clickedCard;
+  }
 }
+  if (card1 && card2) {
+    noClick = true
 
-// when the DOM loads
+    let card1cn = card1.className;
+    let card2cn = card2.className;
+  
+    if (card1cn === card2cn){
+      totalFlipped += 2;
+      card1.classList.remove("flipped");
+      card2.classList.remove("flipped");
+      card1 = null;
+      card2 = null;
+      noClick = false;
+    } else {
+      setTimeout(
+      function() {
+        card1.style.backgroundColor = "";
+        card2.style.backgroundColor = "";
+        card1.classList.remove("flipped");
+        card2.classList.remove("flipped");
+        card1 = null;
+        card2 = null;
+        noClick = false;
+      }, 
+      200);
+    }
+  }
+  if(totalFlipped == 10){
+    alert("Total clicks: " + currentScore + " Total Times: " + clockCounter)
+  }
+
+}
+function scorefunc(newScore) {
+  currentScore = newScore
+document.getElementById("score").innerText = "Clicks: " + currentScore
+return currentScore
+}
+// alert("Total clicks: " + currentScore + "Total Times: " + clockCounter)
 createDivsForColors(shuffledColors);
-
-/* */
